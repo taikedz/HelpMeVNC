@@ -3,6 +3,14 @@ import os, os.path, sys, cStringIO
 
 
 """
+HelpMeVNC - a Gitso fork
+
+Portions (C) 2015 Tai Kedzierski
+
+HelpMeVNC is based on code from Gitso 0.6
+
+=====
+
 Gitso - Gitso is to support others
 
 Gitso is a utility to facilitate the connection of VNC

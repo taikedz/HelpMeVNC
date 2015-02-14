@@ -1,6 +1,14 @@
 #! /usr/bin/env python
 
 """
+HelpMeVNC - a Gitso fork
+
+Portions (C) 2015 Tai Kedzierski
+
+HelpMeVNC is based on code from Gitso 0.6
+
+=====
+
 Gitso - Gitso is to support others
 
 Gitso is a utility to facilitate the connection of VNC
@@ -46,9 +54,6 @@ class ConnectionWindow(wx.Frame):
 		self.thread = None
 		self.threadLock = thread.allocate_lock()
 		
-		# Disable until 0.7 release
-		self.enablePMP = False
-		
 		if sys.platform.find('linux') != -1:
 			width = 165
 			height = 350
@@ -85,12 +90,6 @@ class ConnectionWindow(wx.Frame):
 		
 		self.Bind(wx.EVT_RADIOBUTTON, self.RadioToggle, id=self.rb1.GetId())
 		self.Bind(wx.EVT_RADIOBUTTON, self.RadioToggle, id=self.rb2.GetId())
-		
-		# checkbox for natpmp
-		if sys.platform == 'darwin' or sys.platform.find('linux') != -1:
-			if self.enablePMP:
-				self.cb1 = wx.CheckBox(self, -1, 'Use NAT-PMP', (130, 48))
-				self.cb1.Enable(False)
 
 
 		# the combobox Control
@@ -166,15 +165,9 @@ class ConnectionWindow(wx.Frame):
 		if self.rb1.GetValue():
 			self.ToggleValue = 0
 			self.hostField.Enable(True)
-			if sys.platform == 'darwin' or sys.platform.find('linux') != -1:
-				if self.enablePMP:
-					self.cb1.Enable(False)
 		else:
 			self.ToggleValue = 1
 			self.hostField.Enable(False)
-			if sys.platform == 'darwin' or sys.platform.find('linux') != -1:
-				if self.enablePMP:
-					self.cb1.Enable(True)
 	
 	
 	def ConnectSupport(self, event):

@@ -1,6 +1,14 @@
 #! /usr/bin/env python
 
 """
+HelpMeVNC - a Gitso fork
+
+Portions (C) 2015 Tai Kedzierski
+
+HelpMeVNC is based on code from Gitso 0.6
+
+=====
+
 Gitso - Gitso is to support others
 
 Gitso is a utility to facilitate the connection of VNC
@@ -44,8 +52,10 @@ class ArgsParser:
 
 		
 		if sys.platform.find('linux') != -1:
-			self.paths['main'] = os.path.join(sys.path[0], '..', 'share', 'gitso')
-			self.paths['copyright'] = os.path.join(sys.path[0], '..', 'share', 'doc', 'gitso', 'COPYING')
+			#self.paths['main'] = os.path.join(sys.path[0], '..', 'share', 'gitso')
+			self.paths['main'] = './' # FIXME
+			#self.paths['copyright'] = os.path.join(sys.path[0], '..', 'share', 'doc', 'gitso', 'COPYING')
+			self.paths['copyright'] = './COPYING' # FIXME
 		elif sys.platform == "darwin":
 			self.paths['main'] = sys.path[0]
 			self.paths['copyright'] = os.path.join(sys.path[0], 'COPYING')

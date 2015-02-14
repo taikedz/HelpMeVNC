@@ -1,6 +1,9 @@
 #! /bin/bash
 
 ##########
+# HelpMeVNC - a Gitso 0.6 Fork
+# Portions (C) 2015 Tai Kedzierski
+##########
 # Gitso - Gitso is to support others
 # 
 # Copyright 2008 - 2010: Aaron Gerber, Derek Buranen
@@ -94,7 +97,6 @@ function snowLeopardDMG {
 	cp ConnectionWindow.py $OSX_BUILD_DIR/Gitso.app/Contents/Resources/
 	cp AboutWindow.py $OSX_BUILD_DIR/Gitso.app/Contents/Resources/
 	cp GitsoThread.py $OSX_BUILD_DIR/Gitso.app/Contents/Resources/
-	cp NATPMP.py $OSX_BUILD_DIR/Gitso.app/Contents/Resources/
 	
 	cp arch/osx/libjpeg-copyright.txt $OSX_BUILD_DIR/Gitso.app/Contents/Frameworks/
 	cp arch/osx/osxnvc_echoware-copyright.txt $OSX_BUILD_DIR/Gitso.app/Contents/Resources/OSXvnc/
@@ -152,7 +154,6 @@ function LeopardDMG {
 	cp ConnectionWindow.py $OSX_BUILD_DIR/Gitso.app/Contents/Resources/
 	cp AboutWindow.py $OSX_BUILD_DIR/Gitso.app/Contents/Resources/
 	cp GitsoThread.py $OSX_BUILD_DIR/Gitso.app/Contents/Resources/
-	cp NATPMP.py $OSX_BUILD_DIR/Gitso.app/Contents/Resources/
 	
 	cp arch/osx/libjpeg-copyright.txt $OSX_BUILD_DIR/Gitso.app/Contents/Frameworks/
 	cp arch/osx/osxnvc_echoware-copyright.txt $OSX_BUILD_DIR/Gitso.app/Contents/Resources/OSXvnc/
@@ -302,7 +303,6 @@ elif test "`uname -a 2>&1 | grep Linux | grep -v which`"; then
 		cp Processes.py $DEB_BUILD_DIR/usr/share/$DEB_BUILD_DIR/
 		cp ArgsParser.py $DEB_BUILD_DIR/usr/share/$DEB_BUILD_DIR/
 		cp __init__.py $DEB_BUILD_DIR/usr/share/$DEB_BUILD_DIR/
-		cp NATPMP.py $DEB_BUILD_DIR/usr/share/$DEB_BUILD_DIR/
 		cp hosts.txt $DEB_BUILD_DIR/usr/share/$DEB_BUILD_DIR/
 		cp icon.ico $DEB_BUILD_DIR/usr/share/$DEB_BUILD_DIR/
 		cp icon.png $DEB_BUILD_DIR/usr/share/$DEB_BUILD_DIR/

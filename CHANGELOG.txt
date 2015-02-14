@@ -6,7 +6,6 @@ HelpMeVNC
 Next version:
 ------------------------------
 
-* Remove NATPMP code - I can't support it myself
 * Add a UI element to select port
 * Add a UI element to specify remote server
 * Add a script to configure remote server for tunneling
@@ -15,14 +14,19 @@ Next version:
 * Switch out the icon set
 * Change configuration location to a ~/.helpmevnc configuration directory
 	* Move hosts.txt here
-
+* Test on
+	* Linux - Ubuntu
+	* Linux - Portable
+	* Mac OS X
+	* Windows 7, 8, 10
 
 0.1 (in progress)
 ------------------------------
 
 Accomplished:
 
-* Forked code and setup instructions for Gitso 0.6 to HelpMeVNC on GitHub
+* Forked code and setup instructions for (Gitso 0.6 on Google Code) to (HelpMeVNC 0.1 on GitHub)
+* Remove NATPMP code - I can't support it myself
 
 
 =====================================================================

@@ -1,5 +1,9 @@
 ; makegitso.nsi
 ; ----------------
+; HelpMeVNC - a Gitso 0.6 Fork
+; Portions (C) 2015 Tai Kedzierski
+;
+;
 ; Package Gitso for Windows using NSIS
 ; 
 ; Copyright 2008 - 2010: Aaron Gerber and Derek Buranen
