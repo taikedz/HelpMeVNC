@@ -11,7 +11,10 @@ Next version:
 * Add a UI element to specify remote server
 * Add a script to configure remote server for tunneling
 * Remove "Gitso" naming artifacts.
+	* Will require code re-writes
 * Switch out the icon set
+* Change configuration location to a ~/.helpmevnc configuration directory
+	* Move hosts.txt here
 
 
 0.1 (in progress)
