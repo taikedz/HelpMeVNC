@@ -10,7 +10,8 @@ Next version:
 * Add a UI element to select port
 * Add a UI element to specify remote server
 * Add a script to configure remote server for tunneling
-
+* Remove "Gitso" naming artifacts.
+* Switch out the icon set
 
 
 0.1 (in progress)
