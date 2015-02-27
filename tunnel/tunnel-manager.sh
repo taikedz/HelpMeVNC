@@ -3,7 +3,8 @@
 # Script to automatically start or kill a tunnel
 # Saves information to a ~/.config/helpmesee/tunnels/PORT.pid containing the PID of the SSH instance
 
-# ssh -fN -R 5500:localhost:22 anchor & >> ~/.autotunnel/PORT.log
+# TODO : extra features to include
+# STATUSALL - display the statuses of all tunnels
 
 # Declare global variables
 
@@ -202,6 +203,7 @@ STOP)
 		kill $( cat "$t_confdir/$t_lport.log" | head -n 1 )
 		if [[ $? = 0 ]]; then
 			rm "$t_confdir/$t_lport.log"
+			echo "Stopped tunnel to $t_lport"
 		fi
 	else
 		echo "This utility does not manage any remote tunnel to local port $t_lport."
