@@ -1,31 +1,40 @@
-HelpMeVNC is forked from Gitso 0.6
+HelpMeSee is forked from Gitso 0.6
 
 ====================================================================
-HelpMeVNC
+HelpMeSee
 
 Next version:
 ------------------------------
 
 * Add a UI element to select port
-* Add a UI element to specify remote server
-* Add a script to configure remote server for tunneling
+* Add a UI element to specify an intermediary public server
 * Remove "Gitso" naming artifacts.
 	* Will require code re-writes
 * Switch out the icon set
-* Change configuration location to a ~/.helpmevnc configuration directory
+* Change configuration location to a ~/.helpmesee configuration directory
 	* Move hosts.txt here
+	* add a config.ini
+	* store tunnel prefs here
 * Test on
 	* Linux - Ubuntu
-	* Linux - Portable
+	* Linux - Portable (will test on Antergos and CentOS)
 	* Mac OS X
 	* Windows 7, 8, 10
+* Sanitize argument parsing?
+
 
 0.1 (in progress)
 ------------------------------
 
+Testing:
+
+* Script to configure remote server for tunneling
+	* This opens and closes tunnels OK now
+	* Need to verify that this tunnel can be used.
+
 Accomplished:
 
-* Forked code and setup instructions for (Gitso 0.6 on Google Code) to (HelpMeVNC 0.1 on GitHub)
+* Forked code and setup instructions for (Gitso 0.6 on Google Code) to (HelpMeSee 0.1 on GitHub)
 * Remove NATPMP code - I can't support it myself
 
 

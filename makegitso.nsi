@@ -1,6 +1,6 @@
 ; makegitso.nsi
 ; ----------------
-; HelpMeVNC - a Gitso 0.6 Fork
+; HelpMeSee - a Gitso 0.6 Fork
 ; Portions (C) 2015 Tai Kedzierski
 ;
 ;

@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 
 """
-HelpMeVNC - a Gitso fork
+HelpMeSee - a Gitso fork
 
 Portions (C) 2015 Tai Kedzierski
 
-HelpMeVNC is based on code from Gitso 0.6
+HelpMeSee is based on code from Gitso 0.6
 
 =====
 

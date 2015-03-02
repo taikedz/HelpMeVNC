@@ -1,10 +1,14 @@
-# HelpMeVNC
+# HelpMeSee
 
 VNC Reverser for providing support. Forked from Gitso - original prject at <https://code.google.com/p/gitso/>
 
-I am forking this project to Github under the new name "HelpMeVNC" since the original project has not been developed since 2010. The Gitso project's original roadmap for a 0.8 version will not be adhered to, since I haven't all the tools to test the features and little interest in them personally - hence the new name and new direction.
+I am forking this project to Github under the new name "HelpMeSee" since the original project has not been developed since 2010. The Gitso project's original roadmap for a 0.8 version will not be adhered to, since I haven't all the tools to test the features and little interest in them personally - hence the new name and new direction.
 
-NATPMP support will be dropped, easy SSH tunnelling and setup will be added. Beyond that, there are no additional plans as of yet. Suggestions welcome: <https://twitter.com/helpUseIT>
+NATPMP support will be dropped, easy SSH tunnelling and setup will be added.
+
+Instead of this, reverse tunnel management will be added as part of the Linux and Mac versions (HelpMeSee proper), and the Gitso UI will be altered to include easy access to turning remote tunnels on and off from within Gitso. Support will first be for Linux and Mac, Windows will follow as soon as I can get the build working and reverse tunneling set up properly.
+
+Beyond that, there are no additional plans as of yet. Suggestions welcome! <https://twitter.com/helpUseIT>
 
 ## Building Gitso
 

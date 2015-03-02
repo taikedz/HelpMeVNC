@@ -125,8 +125,8 @@ EOHELP
 	# Shorthand for the ports: --tunnel=rport-lport
 	l_ports=$( getarg "$var" "--tunnel" "[1-9][0-9]+-[1-9][0-9]+" )
 	if [[ x$l_ports != x ]]; then
-		t_rport=$( argextract "$l_ports" ".*-([1-9][0-9]+)" )
-		t_lport=$( argextract "$l_ports" "([1-9][0-9]+)-.*" )
+		t_lport=$( argextract "$l_ports" ".*-([1-9][0-9]+)" )
+		t_rport=$( argextract "$l_ports" "([1-9][0-9]+)-.*" )
 	fi
 
 	l_lport=$( getarg "$var" "--lport" "[1-9][0-9]+"  )
@@ -188,8 +188,8 @@ START)
 		# TODO - Somehow we have to pass the password
 		# which is probably not possible if programatically, so need to pass
 		# a key file
-		ssh -fN -R "$t_lport:localhost:$t_rport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
-		pidline=$( ps aux | grep "$t_lport:localhost:$t_rport $t_ruser@$t_rserv" | grep -v grep )
+		ssh -fN -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
+		pidline=$( ps aux | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
 		pid=$( echo $pidline | sed -r "s|^$USER\\s+([0-9]+)\\s+.+$|\1|" )
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
