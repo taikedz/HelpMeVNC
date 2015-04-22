@@ -135,12 +135,13 @@ EOHELP
 	l_rport=$( getarg "$var" "--rport" "[1-9][0-9]+" )
 	if [[ x$l_rport != x ]]; then t_rport=$l_rport; fi
 
-	# Here's a shorthand: --ssh=user@server:port part
+	# Here's a shorthand: --ssh=user@server:port
 	l_ssh=$( getarg "$var" "--ssh" "[a-zA-Z0-9_-]+@[^.][a-z0-9\\.-]+[^.]:[1-9][0-9]+" )
 	if [[ x$l_ssh != x ]]; then
-		# old man in care home complaining about the eggs
-		# they taste of nothing. nothing. nothing.
-		# nurse replies "I just cooked the eggs - I don't lay them"
+		# An old man in a care home is complaining about the eggs:
+		# "They taste of nothing. Nothing. Just nothing."
+		# To which the nurse replies, "I just cook the eggs - I don't lay them."
+
 		t_ruser=$( argextract "$l_ssh" "([a-zA-Z0-9_-]+)@.*" )
 		t_rserv=$( argextract "$l_ssh" ".*@([^.][a-z0-9\\.-]+[^.]):.*" )
 		t_cport=$( argextract "$l_ssh" ".*:([1-9][0-9]+)" )
@@ -177,10 +178,8 @@ EOF
 fi
 
 # ============
-# This section is not at all robust...
 # Need to be able to find connections we did not initiate
-# Need to be able to kill off processes reliably, or reliably report failure to kill them
-# Probably also be able to manage tunnels by name
+# Would be nice to be able to manage tunnels by name
 
 case $t_action in
 START)
@@ -188,8 +187,8 @@ START)
 		# TODO - Somehow we have to pass the password
 		# which is probably not possible if programatically, so need to pass
 		# a key file
-		ssh -fN -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
-		pidline=$( ps aux | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
+		ssh -fN -R "$t_lport:localhost:$t_rport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
+		pidline=$( ps -u $UID | grep "$t_lport:localhost:$t_rport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
 		pid=$( echo $pidline | sed -r "s|^$USER\\s+([0-9]+)\\s+.+$|\1|" )
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
@@ -200,10 +199,13 @@ START)
 	;;
 STOP)
 	if [[ -f "$t_confdir/$t_lport.log" ]]; then
-		kill $( cat "$t_confdir/$t_lport.log" | head -n 1 )
+		killpid=$( cat "$t_confdir/$t_lport.log" | head -n 1 )
+		kill "$killpid"
 		if [[ $? = 0 ]]; then
 			rm "$t_confdir/$t_lport.log"
 			echo "Stopped tunnel to $t_lport"
+		else # need to add another attempt here, with kill -9
+			echo "Failed to kill tunnel to local port $t_lport : $killpid"
 		fi
 	else
 		echo "This utility does not manage any remote tunnel to local port $t_lport."
