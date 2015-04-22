@@ -188,7 +188,7 @@ START)
 		# which is probably not possible if programatically, so need to pass
 		# a key file
 		ssh -fN -R "$t_lport:localhost:$t_rport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
-		pidline=$( ps -u $UID | grep "$t_lport:localhost:$t_rport $t_ruser@$t_rserv" | grep -v grep )
+		pidline=$( ps -ux $UID | grep "$t_lport:localhost:$t_rport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
 		pid=$( echo $pidline | sed -r "s|^$USER\\s+([0-9]+)\\s+.+$|\1|" )
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
