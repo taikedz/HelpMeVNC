@@ -15,6 +15,15 @@ if [[ $? != 0 ]]; then
 	exit 1
 fi
 
+OSTYPE=$(uname -s)
+SEDC='sed -r'
+case $OSTYPE in
+	Darwin)
+		SEDC='sed -E'
+		;;
+esac
+
+
 # DECLARE ARGS
 
 t_action=
@@ -68,7 +77,7 @@ function argextract {
 	local var
 	for var in "$@"; do
 		#echo "Pat $var"
-		a_arg=$(echo $a_arg | sed -r "s|^$var$|\1|")
+		a_arg=$(echo $a_arg | $SEDC "s|^$var$|\1|")
 	done
 	echo $a_arg
 }
@@ -189,9 +198,9 @@ START)
 		# a key file
 		set -e
 		ssh -fNC -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
-		pidline=$( ps -u $UID x | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
+		pidline=$( ps -u $UID -x | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
-		pid=$( echo $pidline | sed -r "s|^$USER\\s+([0-9]+)\\s+.+$|\1|" )
+		pid=$( echo $pidline | $SEDC "s|^$USER\\s+([0-9]+)\\s+.+$|\1|" )
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
 		set +e
 	else
@@ -201,7 +210,7 @@ START)
 	;;
 STOP)
 	if [[ -f "$t_confdir/$t_lport.log" ]]; then
-		killpid=$( cat "$t_confdir/$t_lport.log" | head -n 1 | sed -r 's/^([0-9]+)\s.+/\1/' )
+		killpid=$( cat "$t_confdir/$t_lport.log" | head -n 1 | $SEDC 's/^([0-9]+)\s.+/\1/' )
 		kill "$killpid"
 		if [[ $? = 0 ]]; then
 			rm "$t_confdir/$t_lport.log"
