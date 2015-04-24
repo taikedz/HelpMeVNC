@@ -187,11 +187,13 @@ START)
 		# TODO - Somehow we have to pass the password
 		# which is probably not possible if programatically, so need to pass
 		# a key file
-		ssh -fN -R "$t_lport:localhost:$t_rport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
-		pidline=$( ps -ux $UID | grep "$t_lport:localhost:$t_rport $t_ruser@$t_rserv" | grep -v grep )
+		set -e
+		ssh -fNC -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
+		pidline=$( ps -u $UID x | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
 		pid=$( echo $pidline | sed -r "s|^$USER\\s+([0-9]+)\\s+.+$|\1|" )
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
+		set +e
 	else
                 echo -n "There is a tunnel running for port $t_lport: "
                 tail -n 1 "$t_confdir/$t_lport.log"
@@ -199,7 +201,7 @@ START)
 	;;
 STOP)
 	if [[ -f "$t_confdir/$t_lport.log" ]]; then
-		killpid=$( cat "$t_confdir/$t_lport.log" | head -n 1 )
+		killpid=$( cat "$t_confdir/$t_lport.log" | head -n 1 | sed -r 's/^([0-9]+)\s.+/\1/' )
 		kill "$killpid"
 		if [[ $? = 0 ]]; then
 			rm "$t_confdir/$t_lport.log"
