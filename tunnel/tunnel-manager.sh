@@ -17,9 +17,11 @@ fi
 
 OSTYPE=$(uname -s)
 SEDC='sed -r'
+PSC="ps ux $UID"
 case $OSTYPE in
 	Darwin)
 		SEDC='sed -E'
+		PSC="ps -u $UID -x"
 		;;
 esac
 
@@ -198,7 +200,7 @@ START)
 		# a key file
 		set -e
 		ssh -fNC -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
-		pidline=$( ps -u $UID -x | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
+		pidline=$( $PSC | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
 		pid=$( echo $pidline | $SEDC "s|^$USER\\s+([0-9]+)\\s+.+$|\1|" )
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
