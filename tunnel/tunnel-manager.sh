@@ -131,9 +131,15 @@ CPORT
 EOHELP
 		exit 0
 	fi
-	
+
+	# ====== CONVERSION ========
 	l_action=$( matcharg "$var" "START,STOP,STATUS"  )
 	if [[ x$l_action != x ]]; then t_action=$l_action; fi
+	
+	# becomes the cleaner statement:
+	#matcher="^(START|STOP|STATUS)$"
+	#[[ $var =~ $matcher ]] && t_action=${BASH_REMATCH[1]}
+	# =======================
 
 	# Shorthand for the ports: --tunnel=rport-lport
 	l_ports=$( getarg "$var" "--tunnel" "[1-9][0-9]+-[1-9][0-9]+" )
