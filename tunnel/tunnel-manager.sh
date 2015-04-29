@@ -37,6 +37,8 @@ t_cport=
 
 # =========================================
 # Bash argument extraction example
+#
+# need to switch this to native bash regexing
 # ===
 
 function getarg {
