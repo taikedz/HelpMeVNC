@@ -128,7 +128,6 @@ fi
 # Need to be able to find connections we did not initiate
 # Would be nice to be able to manage tunnels by name
 
-echo "Let's see..."
 
 case $t_action in
 START)
@@ -140,7 +139,7 @@ START)
 		ssh -fNC -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
 		pidline=$( $PSC | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
-		pid=$( echo $pidline | $SEDC "s|^$USER\\s+([0-9]+)\\s+.+$|\1|" )
+		pid=$( echo $pidline | $SEDC "s#^\\s*($USER|$UID)\\s+([0-9]+)\\s+.+\$#\1#" )
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
 		set +e
 	else
