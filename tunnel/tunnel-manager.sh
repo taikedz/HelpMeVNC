@@ -35,61 +35,9 @@ t_rserv=
 t_ruser=
 t_cport=
 
-# =========================================
-# Bash argument extraction example
-#
-# need to switch this to native bash regexing
-# ===
-
-function getarg {
-	# $1 - arg
-	# $2 - label
-	# $3+ - value(s)
-	local a_arg=$1
-	shift
-
-	local a_label=$1
-	shift
-
-	local a_match=$1
-	shift
-
-	echo "$a_arg" | grep -E "^$a_label=$a_match$" | sed -e "s/$a_label=//"
-}
-
-function matcharg {
-	# $1 - argument
-	# $2+ - values
-	local a_arg=$1
-	shift
-
-	local a_match=$( echo "$@" | tr ',' '\n' )
-
-	echo -e "$a_match" | grep "^$a_arg$"
-}
-
-function argextract {
-	#$1 - argument
-	#$2 - series of capturing patterns captured sequentially
-	# This is a bit kludgy and needs refining
-	
-	local a_arg=$1
-	shift
-	
-	#echo "Arg $a_arg"
-
-	local var
-	for var in "$@"; do
-		#echo "Pat $var"
-		a_arg=$(echo $a_arg | $SEDC "s|^$var$|\1|")
-	done
-	echo $a_arg
-}
-
-# ===== Usage
 
 for var in "$@"; do
-	if [[ $( matcharg "$var" "--help,-h,/h" ) != "" ]]; then
+	if [[ $var =~ "^--help|-h|/h$" ]]; then
 		cat <<EOHELP
 Remote Tunnel Manager
 
@@ -101,23 +49,10 @@ Assuming you can tunnel to a remote server, this script is intended to take care
 
 Full set of arguments
 
-	$0 ACTION --lport=LPORT [--rport=RPORT --server=SERVER --user=USER --cport=CPORT]
+	$0 --lport=LPORT {STATUS|STOP}
+	$0 --ssh=USER@SERVER[:CPORT] --tunnel=RPORT-LPORT {START|STOP|STATUS}
 
-or short hand:
-
-	$0 START --ssh=USER@SERVER:CPORT --tunnel=RPORT-LPORT
-
-ACTION
-	Any of "START", "STOP" or "STATUS" ; only START requires the full set of arguments
-	STOP and STATUS only need the local port number to stop the tunnel, if it exists
-
-LPORT
-	The local port you want to forward the tunnel to
-
-Establishing a connection with START requires these additional parameters
-
-RPORT
-	The port on the remote server which is listening
+Connection details:
 
 SERVER
 	The remote server which is the front end of the tunnel
@@ -128,60 +63,53 @@ USER
 CPORT
 	The SSH port of the remote server
 
+Tunnel details:
+
+RPORT
+	The port on the remote server which is listening
+
+LPORT
+	The local port you want to forward the tunnel to
+
 EOHELP
 		exit 0
 	fi
 
-	# ====== CONVERSION ========
-	l_action=$( matcharg "$var" "START,STOP,STATUS"  )
-	if [[ x$l_action != x ]]; then t_action=$l_action; fi
-	
-	# becomes the cleaner statement:
-	#matcher="^(START|STOP|STATUS)$"
-	#[[ $var =~ $matcher ]] && t_action=${BASH_REMATCH[1]}
-	# =======================
+	echo "Processing [$var]"
 
-	# Shorthand for the ports: --tunnel=rport-lport
-	l_ports=$( getarg "$var" "--tunnel" "[1-9][0-9]+-[1-9][0-9]+" )
-	if [[ x$l_ports != x ]]; then
-		t_lport=$( argextract "$l_ports" ".*-([1-9][0-9]+)" )
-		t_rport=$( argextract "$l_ports" "([1-9][0-9]+)-.*" )
-	fi
+	matcher="^(START|STOP|STATUS)$"
+	[[ $var =~ $matcher ]] && t_action=${BASH_REMATCH[1]}
 
-	l_lport=$( getarg "$var" "--lport" "[1-9][0-9]+"  )
-	if [[ x$l_lport != x ]]; then t_lport=$l_lport; fi
+	matcher="^--tunnel=([1-9][0-9]+)-([1-9][0-9]+)$"
+	[[ $var =~ $matcher ]] && {
+		t_rport=${BASH_REMATCH[1]}
+		t_lport=${BASH_REMATCH[2]}
+	}
 
-	l_rport=$( getarg "$var" "--rport" "[1-9][0-9]+" )
-	if [[ x$l_rport != x ]]; then t_rport=$l_rport; fi
+	matcher="^--lport=([1-9][0-9]+)$"
+	[[ $var =~ $matcher ]] && { t_lport=${BASH_REMATCH[1]}; }
 
-	# Here's a shorthand: --ssh=user@server:port
-	l_ssh=$( getarg "$var" "--ssh" "[a-zA-Z0-9_-]+@[^.][a-z0-9\\.-]+[^.]:[1-9][0-9]+" )
-	if [[ x$l_ssh != x ]]; then
+	matcher="^--ssh=([a-zA-Z0-9_-]+)@([^.][a-z0-9\\.-]+[^.])(:([1-9][0-9]+))?$"
+	[[ $var =~ $matcher ]] && {
 		# An old man in a care home is complaining about the eggs:
 		# "They taste of nothing. Nothing. Just nothing."
 		# To which the nurse replies, "I just cook the eggs - I don't lay them."
 
-		t_ruser=$( argextract "$l_ssh" "([a-zA-Z0-9_-]+)@.*" )
-		t_rserv=$( argextract "$l_ssh" ".*@([^.][a-z0-9\\.-]+[^.]):.*" )
-		t_cport=$( argextract "$l_ssh" ".*:([1-9][0-9]+)" )
-	fi
-	
-	l_rserv=$( getarg "$var" "--server" "[^.][a-z0-9\\.-]+[^.]" )
-	if [[ x$l_rserv != x ]]; then t_rserv=$l_rserv; fi
+		t_ruser=${BASH_REMATCH[1]}
+		t_rserv=${BASH_REMATCH[2]}
+		t_cport=${BASH_REMATCH[4]}
+		[[ -z $t_cport ]] && { t_cport=22; }
+	}
 
-	l_ruser=$( getarg "$var" "--user" "[a-zA-Z0-9_-]+" )
-	if [[ x$l_ruser != x ]]; then t_ruser=$l_ruser; fi
-
-	l_cport=$( getarg "$var" "--cport" "[1-9][0-9]+" )
-        if [[ x$l_cport != x ]]; then t_cport=$l_cport; fi
+	matcher="^-v|--verbose$"
+	[[ $var =~ $matcher ]] && t_verbose=yes
 done
 
 # ===
 # Argument processing is done
 # ================================
 
-l_verbose=$( matcharg "$var" "-v,--verbose"  )
-if [[ x$l_verbose != x ]]; then
+if [[ "x$t_verbose" == "xyes" ]]; then
 
 cat <<EOF
 Action: $t_action
@@ -199,6 +127,8 @@ fi
 # ============
 # Need to be able to find connections we did not initiate
 # Would be nice to be able to manage tunnels by name
+
+echo "Let's see..."
 
 case $t_action in
 START)
