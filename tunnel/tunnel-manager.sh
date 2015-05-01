@@ -5,10 +5,11 @@
 
 # TODO : extra features to include
 # STATUSALL - display the statuses of all tunnels
+# A GUI ...!
 
 # Declare global variables
 
-t_confdir=$HOME/.config/helpmesee/tunnels
+t_confdir=$HOME/.config/helpmesee/tunnels # FIXME - need to put this in a shared space - /usr/local/share ?
 mkdir -p $t_confdir
 if [[ $? != 0 ]]; then
 	echo "Could not make preferences directory!"
@@ -128,15 +129,16 @@ fi
 # Need to be able to find connections we did not initiate
 # Would be nice to be able to manage tunnels by name
 
+# TODO - do variables check
+# on fail checking, run "$0 --help" and exit
 
 case $t_action in
 START)
 	if [[ ! -f "$t_confdir/$t_lport.log" ]]; then
-		# TODO - Somehow we have to pass the password
-		# which is probably not possible if programatically, so need to pass
-		# a key file
+		# TODO - during initial setup, keys should be created
+		# Method for managing/sending ID would be useful...
 		set -e
-		ssh -fNC -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport #>> "$t_confdir/$t_lport.log" # remember to match the below next!
+		ssh -fNC -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport # remember to match the below next!
 		pidline=$( $PSC | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
 		pid=$( echo $pidline | $SEDC "s#^\\s*($USER|$UID)\\s+([0-9]+)\\s+.+\$#\1#" ) # on mac this does not work yet...
