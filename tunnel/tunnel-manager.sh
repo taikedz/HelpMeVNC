@@ -76,7 +76,7 @@ EOHELP
 		exit 0
 	fi
 
-	echo "Processing [$var]"
+	#echo "Processing [$var]"
 
 	matcher="^(START|STOP|STATUS)$"
 	[[ $var =~ $matcher ]] && t_action=${BASH_REMATCH[1]}
@@ -141,7 +141,7 @@ START)
 		ssh -fNC -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport # remember to match the below next!
 		pidline=$( $PSC | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
 		# extract PID
-		pid=$( echo $pidline | $SEDC "s#^\\s*($USER|$UID)\\s+([0-9]+)\\s+.+\$#\1#" ) # on mac this does not work yet...
+		pid=$( echo $pidline | $SEDC "s#^\\s*($USER|$UID)\\s+([0-9]+)\\s+.+\$#\2#" ) # should work now...
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
 		set +e
 	else
