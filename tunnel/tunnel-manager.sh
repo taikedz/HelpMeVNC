@@ -78,7 +78,7 @@ EOHELP
 
 	#echo "Processing [$var]"
 
-	matcher="^(START|STOP|STATUS)$"
+	matcher="^(START|STOP|STATUS|LIST)$"
 	[[ $var =~ $matcher ]] && t_action=${BASH_REMATCH[1]}
 
 	matcher="^--tunnel=([1-9][0-9]+)-([1-9][0-9]+)$"
@@ -170,4 +170,9 @@ STATUS)
 	else
 		echo "This utility does not manage any remote tunnel to local port $t_lport."
 	fi
+	;;
+LIST)
+	echo "Looking for ssh tunnels ..."
+	$PSC | grep -E 'ssh .+[0-9]+:localhost:[0-9]+' | grep -v grep
+	;;
 esac
