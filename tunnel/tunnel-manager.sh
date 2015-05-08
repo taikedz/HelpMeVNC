@@ -101,6 +101,20 @@ EOHELP
 		t_cport=${BASH_REMATCH[4]}
 		[[ -z $t_cport ]] && { t_cport=22; }
 	}
+	
+	matcher="^--i=(.+)$"
+	[[ $var =~ $matcher ]] && {
+		t_iden="$HOME/.ssh/"${BASH_REMATCH[1]}
+		[[ ! -f "$HOME/.ssh/$t_iden" ]] && {
+			pemid="$t_iden.pem"
+			[[ ! -f "$pemid" ]] && {
+				echo "Identity file '$t_iden' or '$pemid' not found."
+				exit 2
+			}
+			t_iden="$pemid"
+		}
+		t_iden="-i $t_iden"
+	}
 
 	matcher="^-v|--verbose$"
 	[[ $var =~ $matcher ]] && t_verbose=yes
@@ -121,6 +135,8 @@ Remote port: $t_rport
 Server: $t_rserv
 Remote user: $t_ruser
 Connection port: $t_cport
+Identity file: $t_iden
+---------------------------------------
 EOF
 
 fi
@@ -132,14 +148,17 @@ fi
 # TODO - do variables check
 # on fail checking, run "$0 --help" and exit
 
+CONNALIVE="-o ServerAliveInterval=20 -o ServerAliveCountMax=5"
+
 case $t_action in
 START)
 	if [[ ! -f "$t_confdir/$t_lport.log" ]]; then
 		# TODO - during initial setup, keys should be created
 		# Method for managing/sending ID would be useful...
 		set -e
-		ssh -fNC -R "$t_rport:localhost:$t_lport" "$t_ruser@$t_rserv" -p $t_cport # remember to match the below next!
-		pidline=$( $PSC | grep "$t_rport:localhost:$t_lport $t_ruser@$t_rserv" | grep -v grep )
+		CONNSTR="$t_rport:localhost:$t_lport $t_ruser@$t_rserv"
+		ssh -fNC -R $CONNSTR -p $t_cport $t_iden $CONNALIVE 
+		pidline=$( $PSC | grep "$CONNSTR" | grep -v grep )
 		# extract PID
 		pid=$( echo $pidline | $SEDC "s#^\\s*($USER|$UID)\\s+([0-9]+)\\s+.+\$#\2#" ) # should work now...
 		echo -e "$pid\n$pidline" > "$t_confdir/$t_lport.log"
