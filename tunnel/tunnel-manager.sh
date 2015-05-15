@@ -6,10 +6,13 @@
 # TODO : extra features to include
 # STATUSALL - display the statuses of all tunnels
 # A GUI ...!
+#
+# PID management - extract from live search, do not store
+# SAVE - a mode to save the current configuration
 
 # Declare global variables
 
-t_confdir=$HOME/.config/helpmesee/tunnels # FIXME - need to put this in a shared space - /usr/local/share ?
+t_confdir=$HOME/.config/helpmesee/tunnels  # TODO change to store configs, not sessions
 mkdir -p $t_confdir
 if [[ $? != 0 ]]; then
 	echo "Could not make preferences directory!"
