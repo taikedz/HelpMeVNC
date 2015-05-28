@@ -108,10 +108,10 @@ EOHELP
 	matcher="^--i=(.+)$"
 	[[ $var =~ $matcher ]] && {
 		t_iden="$HOME/.ssh/"${BASH_REMATCH[1]}
-		[[ ! -f "$t_iden" ]] && {
+		[[ ! -f "$t_iden.key" ]] && {
 			pemid="$t_iden.pem"
 			[[ ! -f "$pemid" ]] && {
-				echo "Identity file '$t_iden' or '$pemid' not found."
+				echo "Identity file '$t_iden.key' or '$pemid' not found."
 				exit 2
 			}
 			t_iden="$pemid"
