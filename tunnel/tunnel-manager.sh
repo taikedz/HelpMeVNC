@@ -43,11 +43,11 @@ t_cport=
 for var in "$@"; do
 	if [[ $var =~ "^--help|-h|/h$" ]]; then
 		cat <<EOHELP
-Remote Tunnel Manager
+Reverse Tunnel Manager
 
-$0 - Open a remote tunnel
+$0 - Open a reverse tunnel
 
-Assuming you can tunnel to a remote server, this script is intended to take care of the logic of testing and managing a remote tunnel connection
+Assuming you can tunnel to a remote server, this script is intended to take care of the logic of testing and managing a reverse tunnel connection
 
 == Usage ==
 
@@ -79,10 +79,8 @@ EOHELP
 		exit 0
 	fi
 
-	#echo "Processing [$var]"
-
 	matcher="^(START|STOP|STATUS|LIST)$"
-	[[ $var =~ $matcher ]] && t_action=${BASH_REMATCH[1]}
+	[[ $var =~ $matcher ]] && t_action=$var
 
 	matcher="^--tunnel=([1-9][0-9]+)-([1-9][0-9]+)$"
 	[[ $var =~ $matcher ]] && {
@@ -91,7 +89,7 @@ EOHELP
 	}
 
 	matcher="^--lport=([1-9][0-9]+)$"
-	[[ $var =~ $matcher ]] && { t_lport=${BASH_REMATCH[1]}; }
+	[[ $var =~ $matcher ]] && t_lport=${var#--lport=};
 
 	matcher="^--ssh=([a-zA-Z0-9_-]+)@([^.][a-z0-9\\.-]+[^.])(:([1-9][0-9]+))?$"
 	[[ $var =~ $matcher ]] && {
@@ -107,7 +105,7 @@ EOHELP
 	
 	matcher="^--i=(.+)$"
 	[[ $var =~ $matcher ]] && {
-		t_iden="$HOME/.ssh/"${BASH_REMATCH[1]}
+		t_iden="$HOME/.ssh/"${var#--i=}
 		[[ ! -f "$t_iden.key" ]] && {
 			pemid="$t_iden.pem"
 			[[ ! -f "$pemid" ]] && {
@@ -127,7 +125,7 @@ done
 # Argument processing is done
 # ================================
 
-if [[ "x$t_verbose" == "xyes" ]]; then
+if [[ "$t_verbose" = "yes" ]]; then
 
 cat <<EOF
 Action: $t_action
@@ -182,7 +180,7 @@ STOP)
 			echo "Failed to kill tunnel to local port $t_lport : $killpid"
 		fi
 	else
-		echo "This utility does not manage any remote tunnel to local port $t_lport."
+		echo "This utility does not manage any reverse tunnel to local port $t_lport."
 	fi
 	;;
 STATUS)
@@ -190,7 +188,7 @@ STATUS)
 		echo -n "There is a tunnel running for port $t_lport: "
 		tail -n 1 "$t_confdir/$t_lport.log"
 	else
-		echo "This utility does not manage any remote tunnel to local port $t_lport."
+		echo "This utility does not manage any reverse tunnel to local port $t_lport."
 	fi
 	;;
 LIST)
