@@ -14,6 +14,9 @@ if [[ $(ps x | grep fNC | grep -v grep | wc -l) -gt 0 ]]; then
 fi
 
 if [[ $tport =~ $matcher ]]; then
+
+sport=$(($tport+1))
+
 ssh -fNC -R $1:localhost:22 $tserver -o ServerAliveInterval=60 
 [[ "$?" -lt 1 ]] && cat <<EOF
 
@@ -26,10 +29,12 @@ When logged in to $tserver, ssh to the local host on the port you specified
 	ssh -p $1 localhost
 
 
-To make this machine available directly to clients of $tserver on port 5501,
+To make this machine available directly to clients of $tserver on port $sport,
 log in to $tserver and run:
 
-	ssh -L5501:localhost:$tport -g -o TCPKeepAlive=yes -t 127.0.0.1 screen
+	ssh -L$sport:localhost:$tport -g -o TCPKeepAlive=yes -t 127.0.0.1 screen
+
+Leave the session running until it is no longer needed.
 
 !!!!! Remember to kill this tunnel when you are finished !!!!
 
